@@ -1,0 +1,15 @@
+{
+    "http": {
+        "ip": "192.168.1.42",
+        "port": 3000
+    },
+    "jwt": {
+        "api_key": "2eedbf60-2157-4ffa-ac01-26898be02269"
+    },
+    "mongodb": {
+            "url": "mongodb://127.0.0.1/",
+            "db": "fileserver",
+            "collection": "users"
+    }
+}
+

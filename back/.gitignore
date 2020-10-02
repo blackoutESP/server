@@ -1,5 +1,4 @@
 assets/*
-!.gitignore
 # Logs
 logs
 *.log

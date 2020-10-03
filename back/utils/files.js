@@ -9,95 +9,63 @@ const logger        = require('../logger/logger');
 let sizes = [];
 let self = module.exports = {
     ls: (request, response, next) => {
-        const basePath = path.join(__dirname, `../assets/${self.getUserDir(request, response, next)}/`);
+        const basePath = path.join(__dirname, `../assets/${self.getUserDir(request, next)}/`);
         let absPath;
-        let filesArr = [];
-        if (!request.params.path) {
+        if (!request.url) {
                 absPath = basePath;
         } else {
-                absPath = basePath;
-                const url = decodeURI(request.url.replace('/files', ''));
-                absPath = path.join(absPath, url);
-        }
-        fs.readdir(absPath, (error, files) => {
-                if (error) {
-                        console.error(error);
-                        logger.error(error);
-                        return response.status(200).json({ok: false, error});
-                }
-                files.forEach(file => {
-                        fs.stat(path.join(absPath, file), async(error, stats) => {
-                                if (error) {
-                                        console.error(error);
-                                        logger.error(error);
-                                }
-                                let type = mime.lookup(path.join(absPath, file));
-                                if (!type && fs.statSync(path.join(absPath, file)).isDirectory() === false ) type = 'unknown';
-                                let f = {
-                                        name: file,
-                                        stats,
-                                        type
-                                };
-                                if (type) {
-                                        f.size = stats['size'];
-                                } else {
-                                        f.size = stats['size'];
-                                }
-                                filesArr.push(f);
-                                if (filesArr.length === files.length) { // we found all files in directory
-                                        filesArr.sort((x, y) => {
-                                                if (x.name < y.name) {
-                                                        return -1;
-                                                }
-                                                if (x.name > y.name) {
-                                                        return 1;
-                                                }
-                                                return 0;
-                                        });
-                                        if (absPath !== basePath) {
-                                                return response.status(200).json({ok: true, data: filesArr, dir: absPath});
-                                        } else {
-                                                return response.status(200).json({ok: true, data: filesArr});
-                                        }
-                                }
+                absPath = decodeURI(path.join(basePath, request.url.replace('/files', '').replace(/%20/g, ' ')));
+                // const url = decodeURI(request.url.replace('/files', '').replace('/%20%/g', ' '));
+                fs.readdir(absPath, { encoding: 'utf-8', withFileTypes: true }, (error, files) => {
+                        if (error) {
+                                console.error(error);
+                                logger.error(error);
+                                return response.status(200).json({ok: false, error});
+                        }
+                        let filesArray = [];
+                        files.forEach(file => {
+                                const stats = fs.statSync(path.join(absPath, file.name));
+                                const type = mime.lookup(path.join(absPath, file.name)) === false && fs.statSync(path.join(absPath, file.name)).isDirectory() ? 'directory' : 'unknown';
+                                filesArray.push({name: file.name, stats, type});
+                                
                         });
+                        if (filesArray.length === files.length) {
+                                return response.status(200).json({ok: true, data: filesArray});
+                        }
                 });
-        });
+        }
     },
     fileDetails: (request, response, next) => {
-        let totalSize = 0;
-        let url = decodeURI(request.url.replace("/file", "").replace(/%20/g, " "));
-        const absPath = path.join(
-          __dirname,
-          `./../assets/${self.getUserDir(request, response, next)}${url}`
-        );
-        fs.stat(absPath, async (error, stats) => {
-          if (error) {
-            console.error(error);
-            logger.error(error);
-            return response.status(500).json({ ok: false, error });
-          }
-          const length = url.split("/").length;
-          const filename = url.split("/")[length - 1];
-          let type = mime.lookup(absPath);
-          if (
-            !type &&
-            fs.statSync(path.join(absPath)).isDirectory() === false
-          ) {
-            type = "unknown";
-          }
-          if (fs.statSync(absPath).isDirectory()) {
-              
-          } else {
-            const f = {
-              name: filename,
-              stats,
-              type,
-              size: stats["size"],
-            };
-            return response.json({ ok: true, data: f });
-          }
-        });
+        const basePath = path.join(__dirname, `../assets/${self.getUserDir(request, next)}/`);
+        const length = request.url.replace('/file', '').replace(/%20/g, ' ').split('/').length;
+        const filename = request.url.replace('/file', '').replace(/%20/g, ' ').split('/')[length - 1];
+        const absPath = decodeURI(path.join(basePath, request.url.replace('/file', '').replace(/%20/g, ' ')));
+        if (fs.existsSync(absPath)) {
+                fs.stat(absPath, async(error, stats) => {
+                        if (error) {
+                                console.error(error);
+                                logger.error(error);
+                                return response.status(200).json({ok: false, error});
+                        }
+                        const type = mime.lookup(absPath) === false && fs.statSync(absPath).isDirectory() ? 'directory' : mime.lookup(absPath);
+                        if (type === 'directory'){
+                                await self.du(absPath).then((sizes) => {
+                                        let total = 0;
+                                        sizes.forEach(size => total += size);
+                                        const file = {name: filename, stats, type, size: total};
+                                        response.status(200).json({ok: true, data: file});
+                                });
+                                sizes.length = 0;
+                                return;
+                        }else {
+                                const file = {name: filename, stats, type, size: stats['size']};
+                                return response.status(200).json({ok: true, data: file});
+                        }
+                        
+                });
+        } else {
+                return response.status(200).json({ok: false});
+        }
     },
     du: async(absPath) => {
         return new Promise(async(resolve, reject) => {
@@ -108,10 +76,10 @@ let self = module.exports = {
                                 } else {
                                         resolve(total);
                                 }
-                        }));    
+                        }));
                 });
                 Promise.all(sizes).then(sizes => resolve(sizes));
-        })
+        });
     },
     readSizeRecursive: async(absPath, cb) => {
         let total = 0;
@@ -136,26 +104,20 @@ let self = module.exports = {
                                 });
                         });
                 } else {
-                        cb(error, 0);
+                        return cb(error, 0);
                 }
         });
     },
     mkdir: (request, response, next) => {
-        const basePath = path.join(__dirname, `./../assets/${self.getUserDir(request, response, next)}/`);
-        const dirname = decodeURI(request.body.path);
-        const absPath = path.join(basePath, dirname);
-        if(!fs.existsSync(absPath)){
-                fs.mkdir(absPath, { recursive: true, mode: 0o777 }, (error, path) => {
-                        if(error){
-                                console.error(error);
-                                logger.error(error);
-                                return response.status(200).json({ok: false, error});
-                        }
-                        console.log(`created folder ${path}`);
-                        logger.info(`created folder ${path}`);
-                        return response.status(200).json({ok: true, path});
-                });
-        }
+        const basePath = path.join(__dirname, `../assets/${self.getUserDir(request, next)}/`);
+        const url = decodeURI(request.url.replace('/files', '').replace('/%20/g', ' '));
+        fs.mkdir(path.join(basePath, url), {recursive: true}, (error, path) => {
+                if (error) {
+                        console.error(error);
+                        logger.error(error);
+                }
+                return response.status(200).json({ok: true, path});
+        });
     },
     deleteFolderRecursive: (path) => {
         if( fs.existsSync(path) ) {
@@ -182,7 +144,7 @@ let self = module.exports = {
                 response.json({ok: false});
         }else{
                 let url = decodeURI(request.url.replace("/files", "").replace(/%20/g, " "));
-                const absPath = path.join(__dirname, `./../assets/${self.getUserDir(request, response, next)}${url}`);
+                const absPath = path.join(__dirname, `./../assets/${self.getUserDir(request, next)}${url}`);
                 if(absPath === path.join(__dirname, '../assets') || absPath === path.join(__dirname, '../assets/')){ 
                         return response.json({ok: false});
                 }
@@ -202,7 +164,7 @@ let self = module.exports = {
         }
     },
     upload: (request, response, next) => {
-        const basePath = path.join(__dirname, `./../assets/${self.getUserDir(request, response, next)}`);
+        const basePath = path.join(__dirname, `./../assets/${self.getUserDir(request, next)}`);
         let filePath = decodeURI(request.url.replace("/upload", "").replace(/%20/g, " "));
         Object.values(request.files).forEach(file => {
                 file.mv(path.join(basePath, `${filePath}/${file.name}`), (error) => {
@@ -217,7 +179,7 @@ let self = module.exports = {
     },
     download: (request, response, next) => {
         let url = decodeURI(request.url.replace("/download", "").replace(/%20/g, " "));
-        const absPath = path.join(__dirname, `./../assets/${self.getUserDir(request, response, next)}${url}`);
+        const absPath = path.join(__dirname, `./../assets/${self.getUserDir(request, next)}${url}`);
         if(absPath === path.join(__dirname, '../assets') || absPath === path.join(__dirname, '../assets/')){ 
                 return response.json({ok: false});
         }
@@ -249,7 +211,7 @@ let self = module.exports = {
                 });
         }
     },
-    getUserDir: (request, response, next) => {
+    getUserDir: (request, next) => {
         let userDir;
         let bearer = request.headers.authorization || request.query.authorization;
         const token = bearer.split(' ')[1];
@@ -262,5 +224,33 @@ let self = module.exports = {
                 userDir = `_${decoded.user}`;
         });
         return userDir;
+    },
+    makeQuerablePromise: (promise) => {
+        // Don't modify any promise that has been already modified.
+        if (promise.isResolved) return promise;
+    
+        // Set initial state
+        var isPending = true;
+        var isRejected = false;
+        var isFulfilled = false;
+    
+        // Observe the promise, saving the fulfillment in a closure scope.
+        var result = promise.then(
+            function(v) {
+                isFulfilled = true;
+                isPending = false;
+                return v; 
+            }, 
+            function(e) {
+                isRejected = true;
+                isPending = false;
+                throw e; 
+            }
+        );
+    
+        result.isFulfilled = function() { return isFulfilled; };
+        result.isPending = function() { return isPending; };
+        result.isRejected = function() { return isRejected; };
+        return result;
     }
 };

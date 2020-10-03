@@ -1,0 +1,120 @@
+@import '../../../custom-theme.scss';
+$primary: map-get($dark-theme, primary);
+$primary-light: map-get($light-theme, primary);
+$accent: map-get($dark-theme, accent);
+$accent-light: map-get($light-theme, accent);
+$warn: map-get($dark-theme, warn);
+$warn-light: map-get($light-theme, warn);
+
+.dark-primary {
+  color: mat-color($primary);
+}
+
+.dark-accent {
+  color: mat-color($accent);
+}
+
+.dark-warn {
+  color: mat-color($warn);
+}
+
+.light-primary {
+  color: mat-color($primary-light);
+}
+
+.light-accent {
+  color: mat-color($accent-light);
+}
+
+.light-warn {
+  color: mat-color($warn-light);
+}
+
+.drop {
+  width: auto;
+  height: fit-content;
+  padding: 2rem;
+  text-align: center;
+  border: 1px dashed; // #90a4ae;
+  border-radius: 3px;
+  position: relative;
+  margin: 0 auto;
+  border-color: mat-color($accent);
+}
+
+input[type="file"] {
+  opacity: 0;
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+label {
+  width: 130px;
+  height: 40px;
+  border-radius: 20px;
+  padding: 8px 16px;
+  color: mat-color($primary);
+  background-color: mat-color($accent);
+}
+
+.label-bg-dark {
+  color: mat-color($primary);
+  background-color: mat-color($accent);
+}
+
+.label-bg-light {
+  color: mat-color($primary-light);
+  background-color: mat-color($accent-light);
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 400;
+  color: mat-color($accent);
+}
+
+.h3-dark {
+  color: mat-color($accent);
+}
+
+.h3-light {
+  color: mat-color($accent-light);
+}
+
+span{
+  color: mat-color($accent);
+}
+
+.span-dark {
+  color: mat-color($accent);
+}
+
+.span-light {
+  color: mat-color($accent-light);
+}
+
+/**/
+.progress-counter {
+  height: 16px;
+  width: 100%;
+  border-radius: 4px;
+  // background-color: #263238;
+  position: relative;
+  top: 8px;
+}
+
+.progress {
+  width: 0;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  border-radius: 4px;
+  background-color: #388E3C;
+  transition: 0.5s all;
+}

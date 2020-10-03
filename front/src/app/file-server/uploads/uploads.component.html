@@ -1,0 +1,25 @@
+<mat-expansion-panel [expanded]="!mobile">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <h3 [ngClass]="{'h3-dark': themeSelected === 'dark', 'h3-light': themeSelected === 'light'}">File Uploads</h3>
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <div class="upload" [ngClass]="{'dark-accent': themeSelected === 'dark', 'light-accent': themeSelected === 'light'}">
+    <div class="drop" [ngStyle]="themeSelected === 'light' ? {'border-color': 'light-accent'}: {'border-color': 'dark-accent'}" appDragAndDrop multiple (fileDropped)="onFileDropped($event)">
+      <input type="file" #fileDrop id="fileDrop" multiple (change)="fileBrowseHandler($event.target.files)" />
+      <span class="material-icons" [ngClass]="{'span-dark': themeSelected === 'dark', 'span-light': themeSelected === 'light'}">
+        cloud_upload
+      </span>
+      <h3 [ngClass]="{'h3-dark': themeSelected === 'dark', 'h3-light': themeSelected === 'light'}">Drop your files here</h3>
+      <label [ngClass]="{'label-bg-dark': themeSelected === 'dark', 'label-bg-light': themeSelected === 'light'}"
+        for="fileDrop">
+        Browse...
+      </label>
+    </div>
+  </div>
+  <div *ngIf="file">
+    <div class="progress-counter">
+      <div class="progress" [style.width]="file?.progress + '%'"><span style="color: black; z-index: 2; float: right;">{{ file?.progress }} %</span></div>
+    </div>
+  </div>
+</mat-expansion-panel>

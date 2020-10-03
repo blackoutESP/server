@@ -1,0 +1,75 @@
+@import '../../custom-theme.scss';
+$primary: map-get($dark-theme, primary);
+$primary-light: map-get($light-theme, primary);
+$accent: map-get($dark-theme, accent);
+$accent-light: map-get($light-theme, accent);
+$warn: map-get($dark-theme, warn);
+$warn-light: map-get($light-theme, warn);
+
+.container {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: "toolbar"
+                       "main";
+  width: 100%;
+  height: 100%;
+}
+
+.toolbar {
+  display: grid;
+  grid-area: toolbar;
+  // background-color: #546e7a;
+}
+
+.toolbar div {
+display: flex;
+flex-direction: row;
+}
+
+.toolbar div span.material-icons{
+  color: mat-color($primary);
+}
+
+.toolbar div span {
+  color: mat-color($primary);
+}
+
+.toolbar div span:nth-child(1){
+font-size: 1.5em;
+margin-right: .5em;
+}
+
+.main {
+display: grid;
+grid-area: main;
+// background-color: #607d8b;
+}
+
+div.login-form {
+  width: auto;
+  height: auto;
+  margin: auto;
+  background-color: transparent;
+}
+
+div.login-form form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+button[type="submit"]{
+  background-color: transparent;
+  color: mat-color($primary);
+  border: 0px;
+  width: fit-content;
+  cursor: pointer;
+}
+
+span a {
+  // color: #263238;
+  color: mat-color($primary);
+  cursor: pointer;
+}

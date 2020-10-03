@@ -1,0 +1,46 @@
+<div class="mat-app-background dark-theme container">
+  <mat-toolbar class="toolbar">
+          <div>
+              <span class="material-icons">
+                      cloud
+              </span>
+              <span>{{ title }}</span>
+          </div>
+  </mat-toolbar>
+
+  <div class="main">
+          <div class="login-form">
+              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                  <mat-form-field appearance="outline">
+                      <mat-label>Email</mat-label>
+                      <input class="form-control ng-untouched ng-pristine ng-valid"
+                      [formControl]="email" type="email" matInput placeholder="Email">
+                      <mat-icon matSuffix>alternate_email</mat-icon>
+                      <!-- <mat-hint>Hint</mat-hint> -->
+                      <mat-error *ngIf="email.invalid">Enter valid email</mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                      <mat-label>User</mat-label>
+                      <input class="form-control ng-untouched ng-pristine ng-valid"
+                      [formControl]="user" type="text" matInput placeholder="User">
+                      <mat-icon matSuffix>person</mat-icon>
+                      <!-- <mat-hint>Hint</mat-hint> -->
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                      <mat-label>Password</mat-label>
+                      <input class="form-control ng-untouched ng-pristine ng-valid"
+                      [formControl]="password" type="password" matInput placeholder="Password">
+                      <mat-icon matSuffix>lock</mat-icon>
+                      <!-- <mat-hint>Hint</mat-hint> -->
+                  </mat-form-field>
+                  <mat-error *ngIf="error">{{ errorMessage }}</mat-error>
+                  <button type="submit">
+                      <mat-icon>login</mat-icon>
+                  </button>
+                  <span *ngIf="success" class="success"> {{ message }} </span>
+                  <span><a (click)="back()">Login.</a></span>
+              </form>
+          </div>
+  </div>
+</div>
+

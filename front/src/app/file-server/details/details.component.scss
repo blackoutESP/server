@@ -1,0 +1,63 @@
+@import '../../../custom-theme.scss';
+$primary: map-get($dark-theme, primary);
+$primary-light: map-get($light-theme, primary);
+$accent: map-get($dark-theme, accent);
+$accent-light: map-get($light-theme, accent);
+$warn: map-get($dark-theme, warn);
+$warn-light: map-get($light-theme, warn);
+
+.dark-primary {
+  color: mat-color($primary);
+}
+
+.dark-accent {
+  color: mat-color($accent);
+}
+
+.dark-warn {
+  color: mat-color($warn);
+}
+
+.light-primary {
+  color: mat-color($primary-light);
+}
+
+.light-accent {
+  color: mat-color($accent-light);
+}
+
+.light-warn {
+  color: mat-color($warn-light);
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 400;
+  color: mat-color($accent);
+}
+
+.h3-dark {
+  color: mat-color($accent);
+}
+
+.h3-light {
+  color: mat-color($accent-light);
+}
+
+.info {
+  display: grid;
+  grid-area: info;
+  color: mat-color($accent);
+}
+
+.info-dark {
+  color: mat-color($accent);
+}
+
+.info-light {
+  color: mat-color($accent-light);
+}
+
+.info .detail {
+  float: right;
+}

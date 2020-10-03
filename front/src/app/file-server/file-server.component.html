@@ -1,0 +1,90 @@
+<div class="container mat-app-background dark-theme" [ngClass]="{'dark-theme': themeSelected === 'dark' ,'light-theme': themeSelected === 'light'}">
+  <mat-toolbar class="toolbar" fxLayout="row">
+    <div fxFlex>
+      <span class="material-icons" [ngClass]="{'dark-primary': themeSelected === 'dark', 'light-primary': themeSelected === 'light'}">
+        cloud
+      </span>
+      <span [ngClass]="{'dark-primary': themeSelected === 'dark', 'light-primary': themeSelected === 'light'}">{{ title }}</span>
+      <span class="material-icons" [ngClass]="{'dark-primary': themeSelected === 'dark', 'light-primary': themeSelected === 'light'}" [matMenuTriggerFor]="menu">
+        more_vert
+        <mat-menu class="menu mat-app-background" [ngClass]="{'dark-theme': themeSelected === 'dark' ,'light-theme': themeSelected === 'light'}" #menu="matMenu">
+          <button mat-menu-item (click)="logout()" title="logout">
+            <mat-icon>login</mat-icon>
+          </button>
+          <button mat-menu-item>
+            <!-- <mat-icon>color_lens</mat-icon> -->
+            <mat-slide-toggle (click)="$event.stopPropagation()" (change)="onThemeSwitch($event)">
+              {{ themeSelected }}
+            </mat-slide-toggle>
+          </button>
+        </mat-menu>
+      </span>
+    </div>
+  </mat-toolbar>
+
+  <div class="main">
+
+    <div class="files">
+      <div class="icons-toolbar">
+        <div class="icons" [ngClass]="{'dark-primary': themeSelected === 'dark', 'light-primary': themeSelected === 'light'}">
+          <span class="material-icons create" (click)="mkdir()" title="create folder">create_new_folder</span>
+          <span class="material-icons delete" *ngIf="isDirectory" (click)="rmDir()" title="delete folder">delete_forever</span>
+          <span class="material-icons download" *ngIf="filename" (click)="downloadFile()" title="download file">cloud_download</span>
+          <span class="material-icons preview" *ngIf="filename" (click)="preview()" title="preview">preview</span>
+          <!-- <span class="material-icons preview" *ngIf="filename" (click)="preview()" title="preview image/pdf">image_search</span> -->
+          <span class="material-icons delete" *ngIf="filename" (click)="deleteFile()" title="delete file">delete_forever</span>
+        </div>
+        <div class="path" [ngClass]="{'dark-primary': themeSelected === 'dark', 'light-primary': themeSelected === 'light'}">
+          <span>
+            <span class="material-icons back" *ngIf="isDirectory" (click)="listFiles('..')" title="back">&nbsp;.. &nbsp;</span><span>{{absPath}}</span>
+          </span>
+        </div>
+      </div>
+      <cdk-virtual-scroll-viewport itemSize="48" class="viewport">
+        <ng-container>
+          <mat-list>
+            <ng-container>
+              <mat-list-item *ngFor="let file of files">
+                <div class="file" [ngClass]="{'dark-primary': themeSelected === 'dark', 'light-primary': themeSelected === 'light'}">
+                  <span class="material-icons" *ngIf="file.type === 'directory'">folder</span>
+                  <span class="material-icons" *ngIf="file.type === 'text/plain'">text_snippet</span>
+                  <span class="material-icons" *ngIf="file.type === 'unknown'">text_snippet</span>
+                  <span class="material-icons" *ngIf="file.type === 'application/zip'">text_snippet</span>
+                  <span class="material-icons" *ngIf="file.type === 'application/pdf'">picture_as_pdf</span>
+                  <span class="material-icons" *ngIf="getFileType(file) === 'image'">image</span>
+                  <span class="material-icons" *ngIf="getFileType(file) === 'audio'">library_music</span>
+                  <span class="material-icons" *ngIf="getFileType(file) === 'video'">music_video</span>
+                  &nbsp;
+                  <a
+                    *ngIf="file.type !== 'directory'" (click)="sendMessage(file.name)">
+                    {{ file.name }}
+                  </a>
+                  <!-- <a
+                    *ngIf="mobile && !file.type" (click)="sendMessage(file.name); listFiles(file.name)">
+                    {{ file.name }}
+                  </a> -->
+                  <a
+                    *ngIf="!mobile && file.type === 'directory'" (click)="sendMessage(file.name)" (dblclick)="listFiles(file.name)">
+                    {{ file.name }}
+                  </a>
+                </div>
+              </mat-list-item>
+            </ng-container>
+          </mat-list>
+        </ng-container>
+      </cdk-virtual-scroll-viewport>
+    </div>
+
+    <div class="sidenav">
+
+      <div class="fileDetails">
+        <app-details [themeSelected]="themeSelected" [path]="absPath"></app-details>
+      </div>
+
+      <div class="fileupload">
+        <app-uploads [mobile]="mobile" [themeSelected]="themeSelected" [path]="absPath"></app-uploads>
+      </div>
+
+    </div>
+  </div>
+</div>

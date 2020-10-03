@@ -1,0 +1,18 @@
+<mat-expansion-panel [expanded]="true">
+  <mat-expansion-panel-header>
+    <h3
+      [ngClass]="{'h3-dark': themeSelected === 'dark', 'h3-light': themeSelected === 'light'}">
+      File Details
+    </h3>
+  </mat-expansion-panel-header>
+  <div class="info" [ngClass]="{'info-dark': themeSelected === 'dark', 'info-light': themeSelected === 'light'}" *ngIf="filename">
+    <div>
+      <div>Name: <span class="detail">{{ filename }}</span></div>
+      <div>Size: <span class="detail">{{ size | fileSize }}</span></div>
+      <div *ngIf="type">Type: <span class="detail">{{ type }}</span></div>
+      <div *ngIf="!type">Type: <span class="detail">directory</span></div>
+      <div *ngIf="extension">Extension: <span class="detail">{{ extension }}</span></div>
+      <div>Created: <span class="detail">{{ created | date: 'short' }}</span></div>
+    </div>
+  </div>
+</mat-expansion-panel>

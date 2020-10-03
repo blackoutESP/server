@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>{{ path }}</h2>
+<mat-dialog-content>
+  <div class="content">
+    <form [formGroup]="folderForm" (ngSubmit)="onSubmit()">
+      <span class="row">
+        <input type="text" class="form-control" [formControl]="dirname" placeholder="folder name..."/>
+        <button type="submit">
+          <span class="material-icons">
+            check_circle
+          </span>
+        </button>
+      </span>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button type="button" mat-dialog-close>
+    <span class="material-icons">
+      close
+    </span>
+  </button>
+</mat-dialog-actions>

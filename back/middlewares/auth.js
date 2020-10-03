@@ -32,16 +32,16 @@ let self = module.exports = {
                                                 const basePath = path.join(__dirname, '../assets');
                                                 fs.mkdir(`${basePath}/_${user}`, { recursive: true, mode: 0o755 }, (error) => {
                                                     if(error){
-                                                            console.error(error);
-                                                            return;
+                                                        console.error(error);
+                                                        return;
                                                     }else{
-                                                            fs.chmod(`${basePath}/_${user}`, 0o755, (error)=>{
-                                                                    if(error){
-                                                                            console.error(error);
-                                                                            logger.error(error);
-                                                                    }
-                                                            });
-                                                            return response.status(200).json({ok: true, data: doc, fails: []});
+                                                        fs.chmod(`${basePath}/_${user}`, 0o755, (error)=>{
+                                                                if(error){
+                                                                        console.error(error);
+                                                                        logger.error(error);
+                                                                }
+                                                        });
+                                                        return response.status(200).json({ok: true, data: doc, fails: []});
                                                     }
                                                 });
                                         });
@@ -59,19 +59,18 @@ let self = module.exports = {
                         let collection = client.db(config.mongodb.db).collection(config.mongodb.collection);
                         collection.find({"user": user, "password": password, "email": email}).toArray(async(error, doc)=>{
                             if(error){
-                                    logger.error(error);
-                                    console.error(error);
-                                    await client.close();
-                                    return response.status(400).json({ok: false, data: [], fails: [error]});
+                                logger.error(error);
+                                console.error(error);
+                                await client.close();
+                                return response.status(400).json({ok: false, data: [], fails: [error]});
                             }
                             await client.close();
                             if(doc.length === 0){
-                                    return response.status(200).json({ok: false, data: [], fails: [{msg: 'User not found.'}]});
+                                return response.status(200).json({ok: false, data: [], fails: [{msg: 'User not found.'}]});
                             }else{
-                                    await self.generateToken(user, email).then(token => {
-                                            console.log(token);
-                                            return response.status(200).json({ok: true, token, fails: []});
-                                    });
+                                await self.generateToken(user, email).then(token => {
+                                        return response.status(200).json({ok: true, token, fails: []});
+                                });
                             }
                         });
 

@@ -1,0 +1,229 @@
+// Custom Theming for Angular Material
+@import './custom-theme.scss';
+$primary: map-get($dark-theme, primary);
+$primary-light: map-get($light-theme, primary);
+$accent: map-get($dark-theme, accent);
+$accent-light: map-get($light-theme, accent);
+$warn: map-get($dark-theme, warn);
+$warn-light: map-get($light-theme, warn);
+
+html, body { height: 100%; max-height: 100vh; overflow: hidden; }
+body { margin: 0; font-family: 'Noto Sans', sans-serif; }
+
+.mat-toolbar.toolbar {
+  display: flex;
+}
+
+.toolbar div {
+  width: 100%;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.toolbar div span.material-icons.mat-menu-trigger {
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+}
+
+.mat-menu-trigger{
+  display: flex;
+  align-self: center;
+  justify-self: end;
+}
+
+.mat-menu {
+  width: auto;
+
+  .mat-menu-panel{
+
+    button {
+      border: 0px;
+      background-color: transparent;
+    }
+  }
+}
+
+.dialog {
+  display: flex;
+  flex-direction: row;
+  overflow-y: auto;
+}
+
+// .mat-dialog-container {
+//   display: flex;
+//   flex-direction: row;
+//   /* background-color: #607d8b; */
+// }
+
+.cdk-overlay-pane{
+  width: unset !important;
+  height: unset !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.mat-dialog-container {
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  max-height: 100% !important;
+  resize: both;
+}
+
+.mat-dialog-container span.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.mat-dialog-container button {
+  border: 0;
+  background-color: transparent;
+}
+
+.mat-dialog-title, .mat-dialog-container span.material-icons, span.row {
+  // color: #263238;
+  color: mat-color($accent);
+}
+
+.mat-dialog-container input:focus {
+  // outline-color: #607d8b;
+  // color: #263238;
+  outline-color: mat-color($accent);
+}
+
+.mat-dialog-content {
+  width: auto;
+  height: auto;
+  overflow: auto;
+}
+
+.mat-dialog-content video{
+  max-width: 1280px;
+  max-height: 720px;
+}
+
+@media screen and (max-width: 1024px) {
+  // .mat-dialog-content video{
+  //   width: 640px;
+  //   height: 360px;
+  // }
+
+  // .mat-dialog-container img {
+  //   width: 640px;
+  //   height: 360px;
+  // }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .cdk-overlay-pane{
+    width: unset !important;
+    height: unset !important;
+    max-width: 90vw !important;
+    max-height: 90vh !important;
+  }
+  .mat-dialog-content video{
+    width: 95%;
+    height: auto;
+  }
+
+  .mat-dialog-container img {
+    width: 854px;
+    height: 480px;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape){
+
+  .cdk-overlay-pane{
+    width: unset !important;
+    height: unset !important;
+    max-width: 90vw !important;
+    max-height: 80vh !important;
+  }
+
+  .mat-dialog-container video {
+    width: 854px;
+    height: 480px;
+  }
+  .mat-dialog-content video{
+    width: 854px;
+    height: 480px;
+  }
+
+  .mat-dialog-container img {
+    width: 854px;
+    height: 480px;
+  }
+
+  // .mat-dialog-content video {
+  //   width: 95%;
+  //   height: auto;
+  // }
+
+  // .mat-dialog-container img {
+  //   width: 95%;
+  //   height: auto;
+  // }
+}
+
+@media (min-width: 481px) and (max-width: 767px) and (orientation: landscape){
+  .cdk-overlay-pane{
+    width: unset !important;
+    height: 80% !important;
+    max-width: 90% !important;
+    max-height: 80% !important;
+  }
+
+  .mat-dialog-content video {
+    width: 95%;
+    height: auto;
+  }
+
+  .mat-dialog-container img {
+    width: 95%;
+    height: auto;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .cdk-overlay-pane{
+    width: unset !important;
+    height: unset !important;
+    max-width: 95% !important;
+    max-height: auto !important;
+    // margin: auto;
+  }
+
+  .mat-dialog-container video {
+    width: 95%;
+    height: auto;
+  }
+
+  .mat-dialog-container img {
+    width: 95%;
+    height: auto;
+  }
+}
+
+@media screen and (min-width: 320px) and (max-width: 480px) and (orientation: landscape) {
+
+  .cdk-overlay-pane{
+    width: unset !important;
+    height: 80% !important;
+    max-width: 90% !important;
+    max-height: 80% !important;
+  }
+
+  .mat-dialog-container video {
+    width: 95%;
+    height: auto;
+  }
+
+  .mat-dialog-container img {
+    width: 95%;
+    height: auto;
+  }
+}

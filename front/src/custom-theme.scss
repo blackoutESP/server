@@ -1,0 +1,42 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$mat-theme-ignore-duplication-warnings: true;
+
+$typography: mat-typography-config(
+  $font-family: 'Noto Sans',
+  $headline: mat-typography-level(32px, 48px, 700),
+  $body-1: mat-typography-level(16px, 24px, 500)
+);
+
+@include angular-material-typography($typography);
+
+$dark-primary: mat-palette($mat-gray, 100);
+$dark-accent: mat-palette($mat-blue-gray, A200, A100, A400);
+$dark-warn: mat-palette($mat-red);
+
+$dark-theme: mat-dark-theme((
+  color: (
+    primary: $dark-primary,
+    accent: $dark-accent,
+    warn: $dark-warn
+  )
+));
+
+.dark-theme {
+  @include angular-material-theme($dark-theme);
+}
+
+$light-primary: mat-palette($mat-gray, 700);
+$light-accent: mat-palette($mat-blue-gray, 400);
+$light-theme: mat-light-theme((
+  color: (
+    primary: $light-primary,
+    accent: $light-accent,
+    warn: $dark-warn
+  )
+));
+.light-theme {
+  @include angular-material-theme($light-theme);
+}

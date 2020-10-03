@@ -64,7 +64,8 @@ export class FileServerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-
+    this.dataService.changeMessage('');
+    this.pathService.changeMessage('');
   }
 
   sendMessage(filename: string): void {

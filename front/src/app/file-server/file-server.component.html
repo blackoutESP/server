@@ -59,12 +59,12 @@
                     *ngIf="file.type !== 'directory'" (click)="sendMessage(file.name)">
                     {{ file.name }}
                   </a>
-                  <!-- <a
-                    *ngIf="mobile && !file.type" (click)="sendMessage(file.name); listFiles(file.name)">
-                    {{ file.name }}
-                  </a> -->
                   <a
                     *ngIf="!mobile && file.type === 'directory'" (click)="sendMessage(file.name)" (dblclick)="listFiles(file.name)">
+                    {{ file.name }}
+                  </a>
+                  <a
+                    *ngIf="mobile && file.type === 'directory'" (click)="sendMessage(file.name); listFiles(file.name)">
                     {{ file.name }}
                   </a>
                 </div>

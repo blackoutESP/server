@@ -25,7 +25,10 @@ let self = module.exports = {
                         let filesArray = [];
                         files.forEach(file => {
                                 const stats = fs.statSync(path.join(absPath, file.name));
-                                const type = mime.lookup(path.join(absPath, file.name)) === false && fs.statSync(path.join(absPath, file.name)).isDirectory() ? 'directory' : 'unknown';
+                                let type = mime.lookup(path.join(absPath, file.name)) === false && fs.statSync(path.join(absPath, file.name)).isDirectory() ? 'directory' : mime.lookup(path.join(absPath, file.name));
+                                if (type === false && !fs.statSync(path.join(absPath, file.name)).isDirectory()) {
+                                        type = 'unknown';
+                                }
                                 filesArray.push({name: file.name, stats, type});
                                 
                         });
@@ -110,17 +113,20 @@ let self = module.exports = {
     },
     mkdir: (request, response, next) => {
         const basePath = path.join(__dirname, `../assets/${self.getUserDir(request, next)}/`);
-        const url = decodeURI(request.url.replace('/files', '').replace('/%20/g', ' '));
+        let url = decodeURI(request.url.replace('/files', '').replace('/%20/g', ' '));
         fs.mkdir(path.join(basePath, url), {recursive: true}, (error, path) => {
                 if (error) {
                         console.error(error);
                         logger.error(error);
                 }
-                return response.status(200).json({ok: true, path});
+                if(url.startsWith('/')) {
+                        url = url.split('').splice(1, url.length).join('').toString();
+                }
+                return response.status(200).json({ok: true, path: url});
         });
     },
     deleteFolderRecursive: (path) => {
-        if( fs.existsSync(path) ) {
+        if(fs.existsSync(path)) {
                 fs.readdirSync(path).forEach(file => {
                         let curPath = path + "/" + file;
                         if(fs.lstatSync(curPath).isDirectory()){

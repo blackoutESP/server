@@ -21,6 +21,7 @@ app.use((request, response, next)=>{
     next(createError(404));
 });
 
-http.createServer(app).listen(config.http.port, config.http.ip, ()=>{
-    console.log(`server listening on ${config.http.ip}:${config.http.port}`);
+const port = process.env.port || 3000;
+http.createServer(app).listen(port, config.http.ip, ()=>{
+    console.log(`server listening on ${config.http.ip}:${port}`);
 });
